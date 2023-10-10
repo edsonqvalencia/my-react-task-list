@@ -18,25 +18,31 @@
 // ¿Qué sucedio al usar el método then()?
 // ¿Qué diferencias encontraste entre async, await y el método then()?
 
+// requerimos readline y fs, para interactividad entre terminal-usuario y lectura de otros archivos
 const readline = require("readline");
 const fs = require("fs");
 
+// esto no recuerdo que era
 const readlineTareas = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
+// se crea un array vacio que servira como contenedor de la información guardada en tareas.json
 let tareas = [];
 
+// condicional que dice que, si existe el archivo tareas.json, entonces se extraerá la información y pondrá en el array anteriormente creado.
 if (fs.existsSync("tareas.json")) {
   const data = fs.readFileSync("tareas.json");
   tareas = JSON.parse(data);
 }
 
+// función creada para que, cada que la lista de tareas se cierre, se guarde la información cambiada en tareas.json
 function guardarTareas() {
   fs.writeFileSync("tareas.json", JSON.stringify(tareas), "utf8");
 }
 
+// función para añadir tareas en el array
 function añadirTarea(indicador, descripcion) {
   return new Promise((resolve, reject) => {
     const añadir = tareas.push({ indicador, descripcion, completado: false });
@@ -48,6 +54,7 @@ function añadirTarea(indicador, descripcion) {
   });
 }
 
+// función para eliminar las tareas que estaban en el array
 function chauTarea(indicador) {
   return new Promise((resolve, reject) => {
     const index = tareas.findIndex(
@@ -62,6 +69,7 @@ function chauTarea(indicador) {
   });
 }
 
+// función para completar tareas
 function completar(indicador) {
   return new Promise((resolve, reject) => {
     const completarTarea = tareas.find(
@@ -74,6 +82,7 @@ function completar(indicador) {
   });
 }
 
+// función para que se pueda ver la lista de tareas
 function lista() {
   console.log("Lista de tareas: ");
   tareas.forEach((tarea) => {
@@ -82,6 +91,7 @@ function lista() {
   });
 }
 
+// con readline se puede interactuar con el usuario mediante la terminal, con lo uqe se le pide que elija una acción y, segun lo que requiera, se ejecutará junto con el llamado de las funciones creadas con anterioridad
 readlineTareas.question(
   "Elige una acción (añadir/eliminar/completar/ver lista/salir): ",
   (accion) => {
