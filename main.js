@@ -1,26 +1,24 @@
-// // Proyecto Integrador - Servidor lista de tareas
-// Instala NodeJS en tu máquina
-// Crea un pequeño servidor que nos retorne en formato JSON un arreglo con una lista de tareas.
-// Inicia el servidor y asegurate de que todo esté en orden.
-// Utilizando npm instala nodemon para las tareas de reinicio de tu servidor.
-// Realiza un cambio haciendo que cada tarea sea un objeto añadiendo a cada tarea una descripción, un estado de completado o pendiente y un identificador o id.
-// Verifica los datos que envía.
+// Servidor Lista de Tareas Express Middlewares
+// Abre el proyecto donde se creó servidor.
+// En tu repositorio crea una rama llamada project-3.
+// Crea un middleware para tu router list-edit-router, que maneje los siguientes errores retornando un código de respuesta 400:
+// Solicitudes POST con el cuerpo vacio
+// Solicitudes POST que tengan información no valida o atributos faltantes para crear las tareas
+// Solicitudes PUT con el cuerpo vacio
+// Solicitudes PUT que tengan información no valida o atributos faltantes para crear las tareas
+// Crea un middleware a nivel de aplicación para gestionar que solo llegen solicitudes por métodos http validos dentro del servidor, de lo contrario debe devolver el error.
+// Crea un middleware para tu direccionador list-view-router, que gestione qué los parámetros seán correctos de lo contrario debe devolver el error.
+// Recuerda que express permite responder codigos de HTML de la siguiente forma
 
-// proyecto integrador, express 1 - Migración de servidor
-// Instala NodeJS en tu máquina.
-// Inicializa un proyecto con npm.
-// Instala Express en el proyecto.
-// Crea un pequeño servidor en Express que retorne en formato JSON un arreglo con una lista de tareas, el listado de tareas debe tener la siguiente estructura:
-// {
-//     "id":"123456",
-//     "isCompleted":false,
-//     "description":"Walk the dog",
-// }
-// Inicia el servidor y asegurate de que todo esté en orden.
-// Verifica los datos que envía en respuesta a una petición.
-// Si ya creaste este servidor con NodeJs:
+// const express = require('express')
+// const app = express()
 
-// Migra dicho servidor para que funcione haciendo uso de Express.
+// app.use(express.json());
+
+// app.get("/this-should-exists", (req, res)=>{
+//     res.status(404).send("Not found")
+// });
+
 // Nota: Estas instrucciones son para avanzar e impulsar el progreso en tu proyecto integrador, el cual será revisado durante el sprint review como parte de la presentación de proyectos. 💻
 
 const express = require("express");

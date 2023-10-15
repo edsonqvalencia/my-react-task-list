@@ -15,6 +15,46 @@ function guardarTareas() {
   fs.writeFileSync("tareas.json", JSON.stringify(tareitas), "utf8");
 }
 
+// middleware para responder con un 400 si el body no tiene cuerpo o si le falta algun atributo al hacer un request post
+router.post("/add", (req, res, next) => {
+  const atributosRequeridos = ["indicador", "descripcion", "completado"];
+  const faltaAtributos = atributosRequeridos.filter(
+    (atributos) => !Object.keys(req.body).includes(atributos)
+  );
+
+  if (Object.keys(req.body).length === 0) {
+    return res.status(400).send("Ingrese información valida.");
+  } else if (faltaAtributos.length > 0) {
+    return res
+      .status(400)
+      .send(
+        "Falta información, verifique y envíe toda la información requerida."
+      );
+  } else {
+    next();
+  }
+});
+
+// middleware para responder con un 400 si el body no tiene cuerpo o si le falta algun atributo al hacer un request put
+router.put("/completar", (req, res, next) => {
+  const atributosRequeridos = ["indicador"];
+  const faltaAtributos = atributosRequeridos.filter(
+    (atributos) => !Object.keys(req.body).includes(atributos)
+  );
+
+  if (Object.keys(req.body).length === 0 || Object.keys(req.body).length > 1) {
+    return res.status(400).send("Ingrese información valida.");
+  } else if (faltaAtributos.length > 0) {
+    return res
+      .status(400)
+      .send(
+        "Falta información, verifique y envíe toda la información requerida."
+      );
+  } else {
+    next();
+  }
+});
+
 router.post("/add", (req, res) => {
   const nuevaTarea = req.body;
   tareitas.push(nuevaTarea);

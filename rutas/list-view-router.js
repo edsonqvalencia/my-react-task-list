@@ -3,6 +3,16 @@ const router = express.Router();
 
 const tareitas = require("../tareas.json");
 
+router.get("/:estado", (req, res, next) => {
+  let estado = req.params.estado;
+
+  if (estado !== "completo" && estado !== "incompleto") {
+    res.status(404).send("Not found");
+  } else {
+    next();
+  }
+});
+
 // se busca la cantidad de tareas con el estado de incompleto y se devuelve la información de las mismas al ir a http://localhost:8080/status/completo
 router.get("/completo", (req, res) => {
   const tareasCompletas = tareitas.filter(
