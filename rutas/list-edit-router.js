@@ -16,7 +16,7 @@ function guardarTareas() {
 }
 
 // middleware para responder con un 400 si el body no tiene cuerpo o si le falta algun atributo al hacer un request post
-router.post("/add", (req, res, next) => {
+router.post("/tareas", (req, res, next) => {
   const atributosRequeridos = ["indicador", "descripcion", "completado"];
   const faltaAtributos = atributosRequeridos.filter(
     (atributos) => !Object.keys(req.body).includes(atributos)
@@ -36,7 +36,7 @@ router.post("/add", (req, res, next) => {
 });
 
 // middleware para responder con un 400 si el body no tiene cuerpo o si le falta algun atributo al hacer un request put
-router.put("/completar", (req, res, next) => {
+router.patch("/tareas/:id", (req, res, next) => {
   const atributosRequeridos = ["indicador"];
   const faltaAtributos = atributosRequeridos.filter(
     (atributos) => !Object.keys(req.body).includes(atributos)
@@ -55,40 +55,43 @@ router.put("/completar", (req, res, next) => {
   }
 });
 
-router.post("/add", (req, res) => {
+router.post("/tareas", (req, res) => {
   const nuevaTarea = req.body;
   tareitas.push(nuevaTarea);
   guardarTareas();
-  return res.send({ tareitas });
+  res
+    .status(201)
+    .json({ mensaje: `la tarea fue añadida correctamente`, tarea: nuevaTarea });
 });
 
-router.delete("/eliminar", (req, res) => {
-  const { indicador } = req.body;
-
-  const chauTarea = tareitas.find(
-    (encontrarTareas) => encontrarTareas.indicador === indicador
+router.patch("/tareas/:id", (req, res) => {
+  const idTarea = req.params.id;
+  const indexTarea = tareitas.findIndex(
+    (laTarea) => laTarea.indicador === idTarea
   );
 
-  const tareaEliminada = tareitas.splice(tareitas.indexOf(chauTarea), 1)[0];
-  guardarTareas();
-
-  res.send(
-    `La tarea: ${tareaEliminada.indicador}: ${tareaEliminada.descripcion} fue eliminada exitosamente.`
-  );
+  if (indexTarea === -1) {
+    res.status(404).json({ error: "Tarea no encontrada" });
+  } else {
+    tareitas[indexTarea].completado = true;
+    guardarTareas();
+    res.status(200).json({ Completada: tareitas[indexTarea] });
+  }
 });
 
-router.put("/completar", (req, res) => {
-  const { indicador } = req.body;
-  const completarTarea = tareitas.map((tarea) => {
-    if (tarea.indicador === indicador) {
-      return { ...tarea, completado: true };
-    }
-    return tarea;
-  });
+router.delete("/tareas/:id", (req, res) => {
+  const idTarea = req.params.id;
+  const indexTarea = tareitas.findIndex(
+    (laTarea) => laTarea.indicador === idTarea
+  );
 
-  tareitas = completarTarea;
-  guardarTareas();
-  res.send(`La tarea con indicador ${indicador} se marcó como completada.`);
+  if (indexTarea === -1) {
+    res.send(404).json({ error: "Tarea no encontrada" });
+  } else {
+    const tareaEliminada = tareitas.splice(indexTarea, 1);
+    guardarTareas();
+    res.status(200).json({ eliminada: tareaEliminada[0] });
+  }
 });
 
 module.exports = router;

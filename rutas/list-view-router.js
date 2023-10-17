@@ -3,14 +3,9 @@ const router = express.Router();
 
 const tareitas = require("../tareas.json");
 
-router.get("/:estado", (req, res, next) => {
-  let estado = req.params.estado;
-
-  if (estado !== "completo" && estado !== "incompleto") {
-    res.status(404).send("Not found");
-  } else {
-    next();
-  }
+//se enlista todas las tareas
+router.get("/", (req, res) => {
+  res.json(tareitas);
 });
 
 // se busca la cantidad de tareas con el estado de incompleto y se devuelve la información de las mismas al ir a http://localhost:8080/status/completo
@@ -35,6 +30,17 @@ router.get("/incompleto", (req, res) => {
     res.status(404).send("no existen tareas incompletas");
   } else {
     res.json(tareasIncompletas);
+  }
+});
+
+router.get("/:id", (req, res) => {
+  const idTarea = req.params.id;
+  const tarea = tareitas.find((t) => t.indicador === idTarea);
+
+  if (!tarea) {
+    res.status(404).json({ error: "Tarea no encontrada" });
+  } else {
+    res.json(tarea);
   }
 });
 

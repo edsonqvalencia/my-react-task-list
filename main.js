@@ -1,11 +1,17 @@
-// Proyecto Integrador - Autenticación en Express
+// REST API Lista de tareas
 // Abre el proyecto donde se creó el servidor.
-// En tu repositorio crea una rama llamada project-4.
-// Crea una ruta /login con el método POST para hacer el proceso de autenticación
-// Implementa la creación de un JWT en la ruta /login para una serie de usuarios predefinidos en un array dentro de tu servidor
-// Debes hacer uso de las variables de entorno configuradas en un archivo .env para el secreto usado en el JWT
-// Crea una ruta protegida que haga la validación de un token JWT recibido dentro de un header de autorización que esté en la petición.
-// Se deben devolver en cada uno de los casos los mensajes de error pertinentes.
+// En tu repositorio crea una rama llamada project-5.
+// Implementa bajo los estándares de REST un API para una lista de tareas, este API debe permitir:
+
+// Crear una nueva tarea
+// Actualizar una tarea.
+// Eliminar una tarea.
+// Listar todas las tareas
+// Listar las tareas completas y las incompletas
+// Obtener una sola tarea.
+
+// Se debé implementar las respuestas en formato JSON y se debe crear un endpoint diferente para cada una de las posibles acciones.
+// Se debé hacer un uso adecuado de los códigos de estado del protocolo HTTP para cada respuesta.
 // Nota: Estas instrucciones son para avanzar e impulsar el progreso en tu proyecto integrador, el cual será revisado durante el sprint review como parte de la presentación de proyectos. 💻
 
 const express = require("express");
@@ -15,13 +21,12 @@ const dotenv = require("dotenv");
 const port = 8080;
 
 dotenv.config();
+app.use(express.json());
 
 const users = [
   { id: 1, email: "edsonqv2411@gmail.com", contraseña: "contraseña1" },
   { id: 2, email: "edsonqv1124@gmail.com", contraseña: "contraseña2" },
 ];
-
-app.use(express.json());
 
 // autenticación con login
 
