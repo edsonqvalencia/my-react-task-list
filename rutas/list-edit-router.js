@@ -1,19 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const fs = require("fs");
-// se crea un array vacio que servira como contenedor de la información guardada en tareas.json
-let tareitas = [];
+const Tarea = require("../tareasModel");
+// const fs = require("fs");
+// // se crea un array vacio que servira como contenedor de la información guardada en tareas.json
+// let tareitas = [];
 
-// condicional que dice que, si existe el archivo tareas.json, entonces se extraerá la información y pondrá en el array anteriormente creado.
-if (fs.existsSync("tareas.json")) {
-  const data = fs.readFileSync("tareas.json");
-  tareitas = JSON.parse(data);
-}
+// // condicional que dice que, si existe el archivo tareas.json, entonces se extraerá la información y pondrá en el array anteriormente creado.
+// if (fs.existsSync("tareas.json")) {
+//   const data = fs.readFileSync("tareas.json");
+//   tareitas = JSON.parse(data);
+// }
 
-// función creada para que, cada que la lista de tareas se cierre, se guarde la información cambiada en tareas.json
-function guardarTareas() {
-  fs.writeFileSync("tareas.json", JSON.stringify(tareitas), "utf8");
-}
+// // función creada para que, cada que la lista de tareas se cierre, se guarde la información cambiada en tareas.json
+// function guardarTareas() {
+//   fs.writeFileSync("tareas.json", JSON.stringify(tareitas), "utf8");
+// }
 
 // middleware para responder con un 400 si el body no tiene cuerpo o si le falta algun atributo al hacer un request post
 router.post("/tareas", (req, res, next) => {
@@ -55,42 +56,72 @@ router.patch("/tareas/:id", (req, res, next) => {
   }
 });
 
-router.post("/tareas", (req, res) => {
-  const nuevaTarea = req.body;
-  tareitas.push(nuevaTarea);
-  guardarTareas();
-  res
-    .status(201)
-    .json({ mensaje: `la tarea fue añadida correctamente`, tarea: nuevaTarea });
-});
-
-router.patch("/tareas/:id", (req, res) => {
-  const idTarea = req.params.id;
-  const indexTarea = tareitas.findIndex(
-    (laTarea) => laTarea.indicador === idTarea
-  );
-
-  if (indexTarea === -1) {
-    res.status(404).json({ error: "Tarea no encontrada" });
-  } else {
-    tareitas[indexTarea].completado = true;
-    guardarTareas();
-    res.status(200).json({ Completada: tareitas[indexTarea] });
+// Obtener todas las tareas
+router.get("/", async (req, res) => {
+  try {
+    const tareas = await Tarea.find();
+    res.json(tareas);
+  } catch (error) {
+    console.error("Error al obtener datos de MongoDB:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 
-router.delete("/tareas/:id", (req, res) => {
-  const idTarea = req.params.id;
-  const indexTarea = tareitas.findIndex(
-    (laTarea) => laTarea.indicador === idTarea
-  );
+// Crear una nueva tarea
+router.post("/", async (req, res) => {
+  try {
+    const nuevaTarea = new Tarea(req.body);
+    const tareaGuardada = await nuevaTarea.save();
+    res.status(201).json(tareaGuardada);
+  } catch (error) {
+    console.error("Error al guardar nueva tarea en MongoDB:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
 
-  if (indexTarea === -1) {
-    res.send(404).json({ error: "Tarea no encontrada" });
-  } else {
-    const tareaEliminada = tareitas.splice(indexTarea, 1);
-    guardarTareas();
-    res.status(200).json({ eliminada: tareaEliminada[0] });
+// Obtener una tarea por ID
+router.get("/:id", async (req, res) => {
+  try {
+    const tarea = await Tarea.findById(req.params.id);
+    if (!tarea) {
+      return res.status(404).json({ error: "Tarea no encontrada" });
+    }
+    res.json(tarea);
+  } catch (error) {
+    console.error("Error al obtener tarea por ID de MongoDB:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+// Actualizar una tarea por ID
+router.put("/:id", async (req, res) => {
+  try {
+    const tareaActualizada = await Tarea.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!tareaActualizada) {
+      return res.status(404).json({ error: "Tarea no encontrada" });
+    }
+    res.json(tareaActualizada);
+  } catch (error) {
+    console.error("Error al actualizar tarea por ID en MongoDB:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+// Eliminar una tarea por ID
+router.delete("/:id", async (req, res) => {
+  try {
+    const tareaEliminada = await Tarea.findByIdAndDelete(req.params.id);
+    if (!tareaEliminada) {
+      return res.status(404).json({ error: "Tarea no encontrada" });
+    }
+    res.json({ eliminada: tareaEliminada });
+  } catch (error) {
+    console.error("Error al eliminar tarea por ID en MongoDB:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 

@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
+const mongoose = require("mongoose");
+const Tarea = require("../tareasModel");
+const dotenv = require("dotenv");
 const status = require("./list-view-router.js");
 const accion = require("./list-edit-router.js");
 
+dotenv.config();
 router.use("/status", status); // puede ser /status/completo y /status/incompleto
 router.use("/accion", accion); // puede ser /accion/add, accion/eliminar, o accion/ver
 
