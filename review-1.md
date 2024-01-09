@@ -5,4 +5,4 @@ tambien se puede ver la lista en el momento que el usuario lo desee y eliminarla
 
 todo el codigo puesto en los distintos archivos que se crearon siguen un estandar de construcción llamado REST, que le da mas orden y estética al codigo para que sea mas legible.
 
-las tareas seran guardadas mediante una base de datos no relacional "MongoDB" en donde la seguridad de que no se perderan a la hora de apagar el equipo esta garantizada.
+las tareas seran guardadas mediante una base de datos no relacional "MongoDB" en donde la seguridad de que no se perderan a la hora de apagar el equipo esta garantizada
