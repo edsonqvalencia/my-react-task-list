@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import { VStack, Heading, Box, FormControl, Input, Button, List } from '@chakra-ui/react';
 import Task from './Task';
 import useTaskManager from '../Hooks/useTaskManager';
-import '../App.css';
 
 const TaskList = () => {
   const { tasks, addTask, deleteTask, updateTask, validateTask } = useTaskManager();
@@ -41,33 +41,37 @@ const TaskList = () => {
   };
 
   return (
-    <div>
-      <h2>Lista de tareas</h2>
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
+    <VStack align="center" spacing="4">
+      <Heading as="h2" size="lg">
+        Añada, edite o elimine tareas
+      </Heading>
+      {errorMessage && <Box color="red.500">{errorMessage}</Box>}
       <form onSubmit={handleAddTask}>
-        <label>
-          Indicador:
-          <input
+        <FormControl>
+          <Input
             type="text"
             name="title"
+            placeholder="Indicador"
             value={formValues.title}
             onChange={handleInputChange}
             required
           />
-        </label>
-        <label>
-          Descripción:
-          <input
+        </FormControl>
+        <FormControl>
+          <Input
             type="text"
             name="description"
+            placeholder="Descripción"
             value={formValues.description}
             onChange={handleInputChange}
             required
           />
-        </label>
-        <button type="submit">Agregar Tarea</button>
+        </FormControl>
+        <Button type="submit" colorScheme="purple">
+          Agregar Tarea
+        </Button>
       </form>
-      <ul>
+      <List spacing="3" maxW="md">
         {tasks.map((task) => (
           <Task
             key={task.indicador}
@@ -79,8 +83,8 @@ const TaskList = () => {
             onEdit={handleEditTask}
           />
         ))}
-      </ul>
-    </div>
+      </List>
+    </VStack>
   );
 };
 

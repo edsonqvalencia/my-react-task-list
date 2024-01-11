@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ListItem, Flex, Text, Checkbox, Button, Input } from '@chakra-ui/react';
 
 const Task = ({ id, descripcion, completado, onToggleComplete, onDelete, onEdit }) => {
   const [isChecked, setIsChecked] = useState(completado);
@@ -28,21 +29,32 @@ const Task = ({ id, descripcion, completado, onToggleComplete, onDelete, onEdit 
   };
 
   return (
-    <li>
+    <ListItem>
       {isEditing ? (
-        <>
-          <input type="text" value={editedDescription} onChange={handleDescriptionChange} />
-          <button onClick={handleSaveClick}>Guardar</button>
-        </>
+        <Flex align="center">
+          <Input
+            type="text"
+            value={editedDescription}
+            onChange={handleDescriptionChange}
+            flex="1"
+          />
+          <Button onClick={handleSaveClick} colorScheme="green" ml="2">
+            Guardar
+          </Button>
+        </Flex>
       ) : (
-        <>
-          <span>{descripcion}</span>
-          <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />
-          <button onClick={handleEditClick}>Editar</button>
-          <button onClick={handleDeleteClick}>Eliminar</button>
-        </>
+        <Flex align="center">
+          <Text flex="1">{descripcion}</Text>
+          <Checkbox isChecked={isChecked} onChange={handleCheckboxChange} />
+          <Button onClick={handleEditClick} colorScheme="teal" ml="2">
+            Editar
+          </Button>
+          <Button onClick={handleDeleteClick} colorScheme="red" ml="2">
+            Eliminar
+          </Button>
+        </Flex>
       )}
-    </li>
+    </ListItem>
   );
 };
 
