@@ -1,68 +1,87 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Task from './Task';
-import useTaskManager from '@/hooks/useTaskManager';
+import useTaskManager from '../Hooks/useTaskManager';
+import '../App.css';
 
 const TaskList = () => {
-  const { tasks, addTask, deleteTask, updateTask } = useTaskManager();
+  const { tasks, addTask, deleteTask, updateTask, validateTask } = useTaskManager();
+  const [formValues, setFormValues] = useState({ title: '', description: '' });
+  const [errorMessage, setErrorMessage] = useState(null);
 
-const handleToggleComplete = (id, completed) => {
-  // Llama a la función updateTask del hook
-  updateTask(id, { completado: completed });
+  const handleToggleComplete = (id, completed) => {
+    updateTask(id, { completado: completed });
+  };
+
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    const { title, description } = formValues;
+
+    try {
+      validateTask(title, description);
+      addTask(title, description);
+      setFormValues({ title: '', description: '' });
+      setErrorMessage(null);
+    } catch (error) {
+      console.error("Error al agregar tarea:", error.message);
+      setErrorMessage(error.message);
+    }
+  };
+
+  const handleDeleteTask = (id) => {
+    deleteTask(id);
+  };
+
+  const handleEditTask = (id, newDescription) => {
+    updateTask(id, { descripcion: newDescription });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+  };
+
+  return (
+    <div>
+      <h2>Lista de tareas</h2>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
+      <form onSubmit={handleAddTask}>
+        <label>
+          Indicador:
+          <input
+            type="text"
+            name="title"
+            value={formValues.title}
+            onChange={handleInputChange}
+            required
+          />
+        </label>
+        <label>
+          Descripción:
+          <input
+            type="text"
+            name="description"
+            value={formValues.description}
+            onChange={handleInputChange}
+            required
+          />
+        </label>
+        <button type="submit">Agregar Tarea</button>
+      </form>
+      <ul>
+        {tasks.map((task) => (
+          <Task
+            key={task.indicador}
+            id={task.indicador}
+            descripcion={task.descripcion}
+            completado={task.completado}
+            onToggleComplete={handleToggleComplete}
+            onDelete={handleDeleteTask}
+            onEdit={handleEditTask}
+          />
+        ))}
+      </ul>
+    </div>
+  );
 };
-
-const handleAddTask = (e) => {
-  // Llama a la función addTask del hook
-  const title = e.target.title.value;
-  const description = e.target.description.value;
-  addTask(title, description);
-  // Reinicia los valores del formulario
-  e.target.reset();
-};
-
-const handleDeleteTask = (id) => {
-  // Llama a la función deleteTask del hook
-  deleteTask(id);
-};
-
-const handleEditTask = (id, newDescription) => {
-  // Llama a la función updateTask del hook
-  updateTask(id, { descripcion: newDescription });
-};
-
-return (
-  <div>
-    <h2>Lista de tareas</h2>
-    <ul>
-      {tasks.map((task) => (
-        <Task
-          key={task.indicador}
-          id={task.indicador}
-          descripcion={task.descripcion}
-          completado={task.completado}
-          onToggleComplete={handleToggleComplete}
-          onDelete={handleDeleteTask}
-          onEdit={handleEditTask}
-        />
-      ))}
-    </ul>
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleAddTask(e);
-      }}
-    >
-      <label>
-        Indicador:
-        <input type="text" name="title" required />
-      </label>
-      <label>
-        Descripción:
-        <input type="text" name="description" required />
-      </label>
-      <button type="submit">Agregar Tarea</button>
-    </form>
-  </div>
-);
-    };
 
 export default TaskList;

@@ -11,9 +11,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -22,6 +24,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -39,4 +42,89 @@
 
 .read-the-docs {
   color: #888;
+}
+
+/* New styles for the task list */
+.task-list {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.task-list h2 {
+  color: #333;
+}
+
+.task-form {
+  margin-top: 1rem;
+}
+
+.task-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.task-form input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.task-form button {
+  background-color: #4b09d2;
+  color: white;
+  font-weight: bold;
+  padding: 0.6rem 1rem;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+.task-form button:disabled {
+  background-color: #ba9ef0;
+  cursor: not-allowed;
+}
+
+.task {
+  list-style: none;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+}
+
+.task span {
+  flex-grow: 1;
+  margin-right: 1rem;
+  color: #333;
+}
+
+.task input[type="checkbox"] {
+  margin-right: 1rem;
+}
+
+.task button {
+  background-color: #e74c3c;
+  color: white;
+  font-weight: bold;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 0.2rem;
+  cursor: pointer;
+}
+
+.task button:hover {
+  background-color: #c0392b;
 }
